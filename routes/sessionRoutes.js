@@ -99,6 +99,7 @@ router.get("/", async (req, res) => {
     }
 
     const sessions = await Session.find({ department: departmentId })
+      .sort({ year: 1 })
       .populate("year department semesters.courses")
       .exec();
 

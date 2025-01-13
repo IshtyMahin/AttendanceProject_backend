@@ -99,7 +99,7 @@ router.get("/all-students", async (req, res) => {
     const students = await Student.find({
       department: departmentId,
       session: sessionId,
-    });
+    }).sort({ studentId: 1 });
 
     const result = [];
 

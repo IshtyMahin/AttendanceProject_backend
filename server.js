@@ -19,10 +19,7 @@ if (!dbUrl) {
 }
 
 mongoose
-  .connect(dbUrl, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
+  .connect(dbUrl)
   .then(() => console.log("MongoDB connected"))
   .catch((err) => {
     console.error("Failed to connect to MongoDB", err);

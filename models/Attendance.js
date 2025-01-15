@@ -13,6 +13,8 @@ const AttendanceSchema = new Schema({
   },
   date: { type: Date, required: true },
   status: { type: String, enum: ["Present", "Absent"], required: true },
+},{
+  timestamps:true
 });
 
 AttendanceSchema.index({ student: 1, course: 1, date: 1 }, { unique: true });

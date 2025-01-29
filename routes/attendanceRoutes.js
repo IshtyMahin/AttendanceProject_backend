@@ -4,27 +4,42 @@ import Session from "../models/Session.js";
 import Student from "../models/Student.js";
 const router = express.Router();
 
+import mongoose from "mongoose";
+import Attendance from "../models/Attendance.js";
+
 router.post("/", async (req, res) => {
   try {
-    // console.log(req.body);
-
-    if (Array.isArray(req.body)) {
-      const savedAttendances = await Promise.all(
-        req.body.map(async (attendanceData) => {
-          const attendance = new Attendance(attendanceData);
-          return await attendance.save();
-        })
-      );
-
-      res.status(201).json(savedAttendances);
-    } else {
-      res.status(400).json({
-        error:
-          "Invalid request format, expected an array of attendance records.",
-      });
+    if (!Array.isArray(req.body)) {
+      return res
+        .status(400)
+        .json({ error: "Expected an array of attendance records." });
     }
+
+    const savedAttendances = [];
+    const errors = [];
+
+    for (const attendanceData of req.body) {
+      try {
+        const attendance = new Attendance(attendanceData);
+        const saved = await attendance.save();
+        savedAttendances.push(saved);
+      } catch (err) {
+        if (err instanceof mongoose.Error.ValidationError) {
+          errors.push({ data: attendanceData, error: "Validation error." });
+        } else if (err.code === 11000) {
+          errors.push({
+            data: attendanceData,
+            error: "Duplicate entry detected.",
+          });
+        } else {
+          errors.push({ data: attendanceData, error: err.message });
+        }
+      }
+    }
+
+    res.status(201).json({ savedAttendances, errors });
   } catch (err) {
-    res.status(400).json({ error: err.message });
+    res.status(500).json({ error: "Server error." });
   }
 });
 

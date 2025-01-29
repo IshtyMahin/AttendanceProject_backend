@@ -4,9 +4,6 @@ import Session from "../models/Session.js";
 import Student from "../models/Student.js";
 const router = express.Router();
 
-import mongoose from "mongoose";
-import Attendance from "../models/Attendance.js";
-
 router.post("/", async (req, res) => {
   try {
     if (!Array.isArray(req.body)) {

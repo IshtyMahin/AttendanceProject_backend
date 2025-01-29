@@ -19,7 +19,7 @@ const AttendanceSchema = new Schema(
     timestamps: true,
   }
 );
-AttendanceSchema.dropIndexes();
+
 AttendanceSchema.index({ student: 1, course: 1, date: 1 }, { unique: true });
 
 const Attendance = model("Attendance", AttendanceSchema);
